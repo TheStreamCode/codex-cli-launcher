@@ -1,0 +1,10 @@
+src/**
+test/**
+docs/**
+scripts/**
+.github/**
+.gitignore
+out/**/*.map
+*.tsbuildinfo
+.vsce/**
+package-lock.json
