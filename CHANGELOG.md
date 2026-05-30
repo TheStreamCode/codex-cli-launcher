@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+### Changed
+
+- Refreshed the Marketplace icon and editor toolbar launcher artwork.
+- Rebuilt the VSIX package with the updated visual assets.
+
 ## 0.1.0
 
 ### Added

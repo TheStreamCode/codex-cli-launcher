@@ -13,6 +13,7 @@ Works on Windows, macOS, and Linux where Codex CLI is available to the integrate
 ## Features
 
 - Adds a launcher button to the editor title area
+- Uses local Marketplace and toolbar artwork packaged with the extension
 - Opens a fresh terminal beside the active editor on every launch
 - Uses the active editor workspace when available, with a fallback to the first open workspace folder
 - Runs a configurable Codex CLI command
@@ -125,6 +126,8 @@ The launcher prefers the workspace folder of the active editor. To control where
 ## Privacy
 
 Codex CLI Launcher does not collect telemetry, analytics, or personal data.
+
+All extension artwork is packaged locally in the VSIX. No external image assets are loaded at runtime.
 
 ## Development
 

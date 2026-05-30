@@ -40,7 +40,7 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.equal(packageJson.displayName, 'Codex CLI Launcher');
   assert.equal(packageJson.description, 'Unofficial VS Code extension that launches Codex CLI in a side terminal from the editor toolbar.');
   assert.equal(packageJson.publisher, 'mikesoft');
-  assert.equal(packageJson.version, '0.1.0');
+  assert.equal(packageJson.version, '0.1.1');
   assert.equal(packageJson.icon, 'media/icon.png');
   assert.equal(packageJson.license, 'MIT');
   assert.equal(packageJson.repository.url, 'https://github.com/TheStreamCode/codex-cli-launcher.git');
@@ -163,6 +163,8 @@ test('changelog documents the initial release scope', () => {
   const changelog = readText('CHANGELOG.md');
 
   assert.match(changelog, /^# Changelog$/m);
+  assert.match(changelog, /## 0\.1\.1/);
+  assert.match(changelog, /Refreshed the Marketplace icon and editor toolbar launcher artwork/);
   assert.match(changelog, /## 0\.1\.0/);
   assert.match(changelog, /Added Codex CLI launcher command/);
   assert.match(changelog, /Added consent-based guided install flow/);

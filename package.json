@@ -3,7 +3,7 @@
   "displayName": "Codex CLI Launcher",
   "description": "Unofficial VS Code extension that launches Codex CLI in a side terminal from the editor toolbar.",
   "publisher": "mikesoft",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/TheStreamCode/codex-cli-launcher.git"
