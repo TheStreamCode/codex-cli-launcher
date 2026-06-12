@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+### Changed
+
+- Unified the `LICENSE` copyright holder to **Michael Gasperini (Mikesoft)**. No functional changes.
+
 ## 0.1.2
 
 ### Changed

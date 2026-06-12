@@ -40,7 +40,7 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.equal(packageJson.displayName, 'Codex CLI Launcher — Run OpenAI Codex in a Side Terminal');
   assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar — one click, fresh terminal, guided npm install. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.');
   assert.equal(packageJson.publisher, 'mikesoft');
-  assert.equal(packageJson.version, '0.1.2');
+  assert.equal(packageJson.version, '0.1.3');
   assert.equal(packageJson.icon, 'media/icon.png');
   assert.equal(packageJson.license, 'MIT');
   assert.equal(packageJson.repository.url, 'https://github.com/TheStreamCode/codex-cli-launcher.git');
