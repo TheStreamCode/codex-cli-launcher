@@ -29,7 +29,7 @@ Works on Windows, macOS, and Linux where Codex CLI is available to the integrate
 
 ## Requirements
 
-- VS Code `^1.93.0`
+- VS Code `^1.103.0`
 - Codex CLI available in the integrated terminal environment, or a working custom launch command configured in settings
 
 ## Installation
