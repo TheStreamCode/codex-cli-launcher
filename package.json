@@ -3,7 +3,7 @@
   "displayName": "Codex CLI Launcher — Run OpenAI Codex in a Side Terminal",
   "description": "Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar — one click, fresh terminal, guided npm install. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.",
   "publisher": "mikesoft",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/TheStreamCode/codex-cli-launcher.git"
