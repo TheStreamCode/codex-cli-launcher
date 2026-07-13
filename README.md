@@ -11,6 +11,8 @@ Codex CLI Launcher is an unofficial VS Code extension that opens OpenAI Codex CL
 
 Works on Windows, macOS, and Linux where Codex CLI is available to the integrated terminal.
 
+Current release: `0.1.7`.
+
 > **Disclaimer**
 > This extension is unofficial and is not affiliated with, endorsed by, sponsored by, or approved by OpenAI. "OpenAI", "Codex", and related names are trademarks of their respective owners.
 
@@ -23,7 +25,7 @@ Works on Windows, macOS, and Linux where Codex CLI is available to the integrate
 - Opens a fresh terminal beside the active editor on every launch
 - Uses the active editor workspace when available, with a fallback to the first open workspace folder
 - Runs a configurable Codex CLI command
-- Offers guided installation when the default `codex` command is not available
+- Links to the official Codex CLI installation documentation when the default `codex` command is not available
 - Supports quoted Windows executable paths
 - Does not collect telemetry, analytics, or personal data
 
@@ -35,35 +37,15 @@ Works on Windows, macOS, and Linux where Codex CLI is available to the integrate
 ## Installation
 
 1. Install the extension from the VS Code Marketplace.
-2. Install Codex CLI globally:
-
-```bash
-npm install -g @openai/codex
-```
-
+2. Install Codex CLI by following the [official Codex CLI installation documentation](https://developers.openai.com/codex/cli/).
 3. Open any file in VS Code.
 4. Click the launcher button in the editor title.
 
 Any equivalent install or launch method that makes `codex` available in your terminal also works.
 
-## Guided Installation
+## Missing CLI
 
-If the default `codex` command is missing, the extension shows a guided warning with options to install Codex CLI, open the Codex documentation, or open the extension settings.
-
-Choosing **Install** opens a visible terminal and runs a generated prompt script. Installation only starts after explicit confirmation:
-
-```text
-Codex CLI was not found.
-Install Codex CLI now? (y/N):
-```
-
-Answer `y` or `yes` to run:
-
-```bash
-npm install -g @openai/codex
-```
-
-Any other answer cancels installation. Restart VS Code if your shell needs a new environment to see globally installed npm commands.
+If the default `codex` command is missing, the extension offers to open the [official Codex CLI installation documentation](https://developers.openai.com/codex/cli/) in your browser. The extension does not download installers, create installation scripts, or run package-manager installation commands.
 
 ## How It Works
 
@@ -79,7 +61,6 @@ The launcher checks command availability when the terminal runs, so it behaves c
 | --- | --- | --- |
 | `codexCliLauncher.cliCommand` | `codex` | Command executed when the launcher button is clicked. The command is sent directly to the integrated terminal. |
 | `codexCliLauncher.terminalName` | `Codex CLI` | Base label used for the created terminal. |
-| `codexCliLauncher.autoInstall` | `true` | Offer guided installation when the default `codex` command is missing. |
 
 Use the Command Palette to open the extension settings:
 
@@ -93,12 +74,6 @@ Default command:
 "codexCliLauncher.cliCommand": "codex"
 ```
 
-Launch through `npx`:
-
-```json
-"codexCliLauncher.cliCommand": "npx --yes @openai/codex"
-```
-
 Windows executable path with spaces:
 
 ```json
@@ -109,11 +84,7 @@ Windows executable path with spaces:
 
 ### The terminal opens but `codex` is not recognized
 
-Install Codex CLI globally and confirm that `codex` works in a regular integrated terminal:
-
-```bash
-npm install -g @openai/codex
-```
+Follow the [official Codex CLI installation documentation](https://developers.openai.com/codex/cli/), then confirm that `codex` works in a regular integrated terminal.
 
 If your setup relies on shell initialization, restart VS Code after installation so new terminals inherit the updated environment.
 

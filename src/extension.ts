@@ -1,6 +1,3 @@
-import * as fs from 'node:fs';
-import * as os from 'node:os';
-import * as path from 'node:path';
 import * as vscode from 'vscode';
 import {
   FALLBACK_TERMINAL_NAME,
@@ -9,16 +6,11 @@ import {
   normalizeTerminalName,
   resolveCliCommandSetting,
   resolveTerminalCwd,
-  shouldPromptToInstallCodex,
+  shouldOfferCodexInstallDocs,
 } from './command-utils.js';
-import {
-  buildCodexInstallPromptCommand,
-  buildCodexInstallPromptMessage,
-  buildCodexInstallPromptScript,
-} from './install-utils.js';
 
 const SETTINGS_NAMESPACE = 'codexCliLauncher';
-const CODEX_DOCS_URL = 'https://help.openai.com/en/articles/11096431';
+const CODEX_DOCS_URL = 'https://developers.openai.com/codex/cli/';
 
 let terminalSequence = 1;
 
@@ -36,13 +28,6 @@ function collectShellExecutionOutput(execution: vscode.TerminalShellExecution): 
 
     return output;
   })();
-}
-
-function writeCodexInstallPromptScript(): string {
-  const scriptPath = path.join(os.tmpdir(), `codex-cli-launcher-install-${process.pid}-${Date.now()}.js`);
-  fs.writeFileSync(scriptPath, buildCodexInstallPromptScript(), 'utf8');
-
-  return scriptPath;
 }
 
 async function openExtensionSettings(context: vscode.ExtensionContext): Promise<void> {
@@ -123,51 +108,14 @@ function executeCommandWithOptionalShellIntegration(
   );
 }
 
-function startGuidedInstall(context: vscode.ExtensionContext): void {
-  const installTerminal = vscode.window.createTerminal({
-    name: 'Install Codex CLI',
-    location: vscode.TerminalLocation.Panel,
-  });
-  const installCommand = buildCodexInstallPromptCommand(writeCodexInstallPromptScript());
-
-  installTerminal.show();
-  executeCommandWithOptionalShellIntegration(installTerminal, installCommand, context);
-}
-
-async function handleMissingCodex(context: vscode.ExtensionContext): Promise<void> {
-  const configuration = vscode.workspace.getConfiguration(SETTINGS_NAMESPACE);
-  const autoInstall = configuration.get<boolean>('autoInstall', true);
-
-  if (!autoInstall) {
-    const selection = await vscode.window.showWarningMessage(
-      `${buildCodexInstallPromptMessage()} Install it manually or enable guided install in settings.`,
-      'Open Settings',
-      'Open Codex Docs',
-    );
-
-    if (selection === 'Open Settings') {
-      await openExtensionSettings(context);
-    } else if (selection === 'Open Codex Docs') {
-      await openCodexInstallInstructions();
-    }
-
-    return;
-  }
-
+async function handleMissingCodex(): Promise<void> {
   const selection = await vscode.window.showWarningMessage(
-    `${buildCodexInstallPromptMessage()} Install it now with npm?`,
-    { modal: true },
-    'Install',
-    'Open Codex Docs',
-    'Open Settings',
+    'Codex CLI was not found. See the official installation documentation.',
+    'Open Official Codex CLI Docs',
   );
 
-  if (selection === 'Install') {
-    startGuidedInstall(context);
-  } else if (selection === 'Open Codex Docs') {
+  if (selection === 'Open Official Codex CLI Docs') {
     await openCodexInstallInstructions();
-  } else if (selection === 'Open Settings') {
-    await openExtensionSettings(context);
   }
 }
 
@@ -177,8 +125,8 @@ function watchForMissingCodex(terminal: vscode.Terminal, cliCommand: string, con
     cliCommand,
     context,
     async (endEvent, output) => {
-      if (shouldPromptToInstallCodex(cliCommand, endEvent.exitCode, output)) {
-        await handleMissingCodex(context);
+      if (shouldOfferCodexInstallDocs(cliCommand, endEvent.exitCode, output)) {
+        await handleMissingCodex();
       }
     },
   );

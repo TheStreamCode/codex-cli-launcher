@@ -10,7 +10,7 @@ const {
   normalizeCliCommand,
   resolveCliCommandSetting,
   resolveTerminalCwd,
-  shouldPromptToInstallCodex,
+  shouldOfferCodexInstallDocs,
 } = require('../out/command-utils.js');
 
 test('defaults target Codex CLI', () => {
@@ -64,26 +64,26 @@ test('extractExecutable preserves quoted Windows paths with spaces', () => {
   );
 });
 
-test('shouldPromptToInstallCodex detects PowerShell command-not-found output', () => {
+test('shouldOfferCodexInstallDocs detects PowerShell command-not-found output', () => {
   const output = "codex: The term 'codex' is not recognized as a name of a cmdlet, function, script file, or executable program.";
 
-  assert.equal(shouldPromptToInstallCodex('codex', 1, output), true);
+  assert.equal(shouldOfferCodexInstallDocs('codex', 1, output), true);
 });
 
-test('shouldPromptToInstallCodex detects POSIX command-not-found exit codes', () => {
-  assert.equal(shouldPromptToInstallCodex('codex', 127, ''), true);
+test('shouldOfferCodexInstallDocs detects POSIX command-not-found exit codes', () => {
+  assert.equal(shouldOfferCodexInstallDocs('codex', 127, ''), true);
 });
 
-test('shouldPromptToInstallCodex ignores custom commands', () => {
-  assert.equal(shouldPromptToInstallCodex('npx --yes @openai/codex', 1, 'command not found'), false);
+test('shouldOfferCodexInstallDocs ignores custom commands', () => {
+  assert.equal(shouldOfferCodexInstallDocs('custom-codex', 1, 'command not found'), false);
 });
 
-test('shouldPromptToInstallCodex ignores unrelated runtime failures', () => {
-  assert.equal(shouldPromptToInstallCodex('codex', 1, 'Error: authentication failed'), false);
+test('shouldOfferCodexInstallDocs ignores unrelated runtime failures', () => {
+  assert.equal(shouldOfferCodexInstallDocs('codex', 1, 'Error: authentication failed'), false);
 });
 
-test('shouldPromptToInstallCodex ignores generic not-found messages unrelated to the executable', () => {
-  assert.equal(shouldPromptToInstallCodex('codex', 1, 'Error: model not found'), false);
+test('shouldOfferCodexInstallDocs ignores generic not-found messages unrelated to the executable', () => {
+  assert.equal(shouldOfferCodexInstallDocs('codex', 1, 'Error: model not found'), false);
 });
 
 test('resolveTerminalCwd uses the active editor workspace when available', () => {

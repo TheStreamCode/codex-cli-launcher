@@ -12,7 +12,7 @@ type ConfigurationInspectionLike<T> = {
   globalValue?: T;
 };
 
-const INSTALLABLE_EXECUTABLES = new Set(['codex']);
+const CODEX_EXECUTABLES = new Set(['codex']);
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -101,10 +101,10 @@ export function extractExecutable(command: string): string {
   return whitespaceIndex === -1 ? normalized : normalized.slice(0, whitespaceIndex);
 }
 
-/** Returns whether a missing executable should offer the Codex npm install flow. */
-export function shouldPromptToInstallCodex(command: string, exitCode: number | undefined, output: string): boolean {
+/** Returns whether a missing executable should offer the official Codex installation documentation. */
+export function shouldOfferCodexInstallDocs(command: string, exitCode: number | undefined, output: string): boolean {
   const executableName = getExecutableBaseName(command);
-  if (!INSTALLABLE_EXECUTABLES.has(executableName)) {
+  if (!CODEX_EXECUTABLES.has(executableName)) {
     return false;
   }
 

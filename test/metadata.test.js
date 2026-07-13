@@ -38,9 +38,9 @@ test('package metadata is public-ready and clearly unofficial', () => {
 
   assert.equal(packageJson.name, 'vscode-codex-cli-launcher');
   assert.equal(packageJson.displayName, 'Codex CLI Launcher — Run OpenAI Codex in a Side Terminal');
-  assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar — one click, fresh terminal, guided npm install. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.');
+  assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.');
   assert.equal(packageJson.publisher, 'mikesoft');
-  assert.equal(packageJson.version, '0.1.5');
+  assert.equal(packageJson.version, '0.1.7');
   assert.equal(packageJson.icon, 'media/icon.png');
   assert.equal(packageJson.license, 'MIT');
   assert.equal(packageJson.repository.url, 'https://github.com/TheStreamCode/codex-cli-launcher.git');
@@ -54,7 +54,7 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.ok(packageJson.keywords.includes('coding agent'));
 });
 
-test('package contributes launcher commands, toolbar item, and safe install settings', () => {
+test('package contributes launcher commands, toolbar item, and launch settings', () => {
   const packageJson = readPackageJson();
   const [openCliCommand, openSettingsCommand] = packageJson.contributes.commands;
 
@@ -74,9 +74,7 @@ test('package contributes launcher commands, toolbar item, and safe install sett
   assert.equal(settings['codexCliLauncher.cliCommand'].scope, 'machine');
   assert.equal(settings['codexCliLauncher.terminalName'].default, 'Codex CLI');
   assert.equal(settings['codexCliLauncher.terminalName'].scope, 'window');
-  assert.equal(settings['codexCliLauncher.autoInstall'].default, true);
-  assert.equal(settings['codexCliLauncher.autoInstall'].scope, 'machine');
-  assert.match(settings['codexCliLauncher.autoInstall'].description, /explicit confirmation/i);
+  assert.equal(settings['codexCliLauncher.autoInstall'], undefined);
 });
 
 test('extension assets are packaged on expected paths', () => {
@@ -89,16 +87,16 @@ test('extension assets are packaged on expected paths', () => {
   assert.ok(commandIcon.length > 0);
 });
 
-test('README covers setup, guided install, privacy, and affiliation disclaimer', () => {
+test('README covers setup, official installation docs, privacy, and affiliation disclaimer', () => {
   const readme = readText('README.md');
 
   assert.match(readme, /^# Codex CLI Launcher$/m);
   assert.match(readme, /unofficial VS Code extension/i);
   assert.match(readme, /not affiliated with, endorsed by, sponsored by, or approved by OpenAI/i);
   assert.match(readme, /## Features/);
-  assert.match(readme, /## Guided Installation/);
-  assert.match(readme, /npm install -g @openai\/codex/);
-  assert.match(readme, /explicit confirmation/i);
+  assert.match(readme, /## Missing CLI/);
+  assert.match(readme, /https:\/\/developers\.openai\.com\/codex\/cli\//);
+  assert.match(readme, /does not download installers, create installation scripts, or run package-manager installation commands/i);
   assert.match(readme, /does not collect telemetry, analytics, or personal data/i);
   assert.match(readme, /npm run check/);
 });
@@ -163,6 +161,8 @@ test('changelog documents the initial release scope', () => {
   const changelog = readText('CHANGELOG.md');
 
   assert.match(changelog, /^# Changelog$/m);
+  assert.match(changelog, /## 0\.1\.7/);
+  assert.match(changelog, /Removed installer process execution/);
   assert.match(changelog, /## 0\.1\.1/);
   assert.match(changelog, /Refreshed the Marketplace icon and editor toolbar launcher artwork/);
   assert.match(changelog, /## 0\.1\.0/);

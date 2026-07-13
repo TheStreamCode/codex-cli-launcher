@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## 0.1.7
+
+### Changed
+
+- Replaced the missing-CLI guided npm installation flow with a single link to the official Codex CLI installation documentation.
+- Removed the automatic-install setting and generated temporary installer script.
+
+### Security
+
+- Removed installer process execution, including the child-process and shell-based installation path.
+
 ## 0.1.6
 
 ### Changed
