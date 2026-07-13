@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## 0.1.6
+
+### Changed
+
+- Improved legal documentation, trademark notices, third-party terms references, and metadata cleanup.
+
 ## 0.1.5
 
 ### Changed
