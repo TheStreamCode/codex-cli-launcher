@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security report
-    url: https://mikesoft.it
-    about: Please report sensitive vulnerabilities privately.
+    url: https://github.com/TheStreamCode/codex-cli-launcher/security/advisories/new
+    about: Report sensitive vulnerabilities privately to the maintainers.
+  - name: Support guide
+    url: https://github.com/TheStreamCode/codex-cli-launcher/blob/main/SUPPORT.md
+    about: Review support channels and the information to include.

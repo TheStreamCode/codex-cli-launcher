@@ -4,9 +4,12 @@ const assert = require('node:assert/strict');
 const {
   FALLBACK_CLI_COMMAND,
   FALLBACK_TERMINAL_NAME,
+  MAX_CAPTURED_SHELL_OUTPUT,
+  appendBoundedOutput,
   buildExtensionSettingsQuery,
   buildTerminalName,
   extractExecutable,
+  isCodexCommand,
   normalizeCliCommand,
   resolveCliCommandSetting,
   resolveTerminalCwd,
@@ -62,6 +65,19 @@ test('extractExecutable preserves quoted Windows paths with spaces', () => {
     extractExecutable('"C:\\Program Files\\OpenAI Codex\\codex.cmd" --login'),
     'C:\\Program Files\\OpenAI Codex\\codex.cmd',
   );
+});
+
+test('isCodexCommand recognizes direct and quoted Codex executables', () => {
+  assert.equal(isCodexCommand('codex --login'), true);
+  assert.equal(isCodexCommand('"C:\\Program Files\\OpenAI Codex\\codex.cmd" --login'), true);
+  assert.equal(isCodexCommand('custom-codex'), false);
+});
+
+test('appendBoundedOutput retains only the latest output window', () => {
+  assert.equal(appendBoundedOutput('1234', '5678', 6), '345678');
+  assert.equal(appendBoundedOutput('ignored', 'abcdefgh', 4), 'efgh');
+  assert.equal(appendBoundedOutput('existing', 'new', 0), '');
+  assert.equal(MAX_CAPTURED_SHELL_OUTPUT, 32 * 1024);
 });
 
 test('shouldOfferCodexInstallDocs detects PowerShell command-not-found output', () => {

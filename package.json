@@ -1,9 +1,10 @@
 {
   "name": "vscode-codex-cli-launcher",
+  "private": true,
   "displayName": "Codex CLI Launcher — Run OpenAI Codex in a Side Terminal",
   "description": "Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.",
   "publisher": "mikesoft",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/TheStreamCode/codex-cli-launcher.git"
@@ -111,13 +112,14 @@
     "test:metadata": "node ./node_modules/typescript/bin/tsc -p . --pretty false && node --test test/metadata.test.js",
     "vscode:prepublish": "node ./node_modules/typescript/bin/tsc -p . --pretty false",
     "package": "node ./node_modules/@vscode/vsce/vsce package",
+    "audit": "npm audit --audit-level=high",
     "check": "node ./node_modules/typescript/bin/tsc -p . --pretty false && node --test test/*.test.js && node ./test/integration/runTest.js && node ./node_modules/@vscode/vsce/vsce ls",
     "generate:icon": "node ./scripts/generate-icon.js"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "@types/vscode": "^1.103.0",
-    "@vscode/test-electron": "^3.0.0",
+    "@types/node": "^22.20.1",
+    "@types/vscode": "1.103.0",
+    "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^3.9.2",
     "typescript": "^7.0.2"
   }

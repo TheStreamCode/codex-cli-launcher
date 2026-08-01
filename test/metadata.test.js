@@ -37,10 +37,11 @@ test('package metadata is public-ready and clearly unofficial', () => {
   const packageJson = readPackageJson();
 
   assert.equal(packageJson.name, 'vscode-codex-cli-launcher');
+  assert.equal(packageJson.private, true);
   assert.equal(packageJson.displayName, 'Codex CLI Launcher — Run OpenAI Codex in a Side Terminal');
   assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.');
   assert.equal(packageJson.publisher, 'mikesoft');
-  assert.equal(packageJson.version, '0.1.7');
+  assert.equal(packageJson.version, '0.1.8');
   assert.equal(packageJson.icon, 'media/icon.png');
   assert.equal(packageJson.license, 'MIT');
   assert.equal(packageJson.repository.url, 'https://github.com/TheStreamCode/codex-cli-launcher.git');
@@ -95,7 +96,7 @@ test('README covers setup, official installation docs, privacy, and affiliation 
   assert.match(readme, /not affiliated with, endorsed by, sponsored by, or approved by OpenAI/i);
   assert.match(readme, /## Features/);
   assert.match(readme, /## Missing CLI/);
-  assert.match(readme, /https:\/\/developers\.openai\.com\/codex\/cli\//);
+  assert.match(readme, /https:\/\/learn\.chatgpt\.com\/docs\/codex\/cli/);
   assert.match(readme, /does not download installers, create installation scripts, or run package-manager installation commands/i);
   assert.match(readme, /does not collect telemetry, analytics, or personal data/i);
   assert.match(readme, /npm run check/);
@@ -124,6 +125,8 @@ test('package scripts use deterministic local tooling entry points', () => {
   assert.equal(packageJson.scripts.test, 'node ./node_modules/typescript/bin/tsc -p . --pretty false && node --test test/*.test.js && node ./test/integration/runTest.js');
   assert.equal(packageJson.scripts.check, 'node ./node_modules/typescript/bin/tsc -p . --pretty false && node --test test/*.test.js && node ./test/integration/runTest.js && node ./node_modules/@vscode/vsce/vsce ls');
   assert.equal(packageJson.scripts.package, 'node ./node_modules/@vscode/vsce/vsce package');
+  assert.equal(packageJson.scripts.audit, 'npm audit --audit-level=high');
+  assert.equal(packageJson.devDependencies['@types/vscode'], '1.103.0');
 });
 
 test('ignore rules keep generated, local, and engineering-only files out of artifacts', () => {
@@ -142,7 +145,11 @@ test('ignore rules keep generated, local, and engineering-only files out of arti
   assert.ok(vscodeignoreEntries.includes('docs/**'));
   assert.ok(vscodeignoreEntries.includes('scripts/**'));
   assert.ok(vscodeignoreEntries.includes('.github/**'));
+  assert.ok(vscodeignoreEntries.includes('.editorconfig'));
+  assert.ok(vscodeignoreEntries.includes('.gitattributes'));
+  assert.ok(vscodeignoreEntries.includes('AGENTS.md'));
   assert.ok(vscodeignoreEntries.includes('out/**/*.map'));
+  assert.ok(vscodeignoreEntries.includes('tsconfig.json'));
   assert.ok(vscodeignoreEntries.includes('package-lock.json'));
 });
 
@@ -154,13 +161,34 @@ test('CI validates the extension with npm on Windows and Linux', () => {
   assert.match(workflow, /ubuntu-latest/);
   assert.match(workflow, /cache: npm/);
   assert.match(workflow, /npm ci/);
+  assert.match(workflow, /npm run audit/);
   assert.match(workflow, /npm run check/);
+  assert.match(workflow, /timeout-minutes: 15/);
+  assert.match(workflow, /cancel-in-progress: true/);
+  assert.doesNotMatch(workflow, /uses:\s+[^\s]+@v\d+/);
+});
+
+test('repository governance files provide structured contribution paths', () => {
+  const codeowners = readText('.github/CODEOWNERS');
+  const bugReport = readText('.github/ISSUE_TEMPLATE/bug_report.yml');
+  const featureRequest = readText('.github/ISSUE_TEMPLATE/feature_request.yml');
+  const issueConfig = readText('.github/ISSUE_TEMPLATE/config.yml');
+  const agents = readText('AGENTS.md');
+
+  assert.match(codeowners, /\* @TheStreamCode/);
+  assert.match(bugReport, /^name: Bug report$/m);
+  assert.match(featureRequest, /^name: Feature request$/m);
+  assert.match(issueConfig, /security\/advisories\/new/);
+  assert.match(agents, /^# Repository Instructions$/m);
+  assert.match(agents, /## Security invariants/);
 });
 
 test('changelog documents the initial release scope', () => {
   const changelog = readText('CHANGELOG.md');
 
   assert.match(changelog, /^# Changelog$/m);
+  assert.match(changelog, /## 0\.1\.8/);
+  assert.match(changelog, /Bounded terminal shell-output capture/);
   assert.match(changelog, /## 0\.1\.7/);
   assert.match(changelog, /Removed installer process execution/);
   assert.match(changelog, /## 0\.1\.1/);

@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## 0.1.8
+
+### Changed
+
+- Updated the missing-CLI link to the current official Codex CLI documentation.
+- Added repository-specific agent guidance, architecture and release documentation, structured issue forms, code ownership, and stronger contributor guidance.
+- Hardened CI with immutable action pins, concurrency cancellation, timeouts, and dependency auditing.
+- Pinned VS Code type definitions and integration tests to the declared minimum supported VS Code release.
+
+### Security
+
+- Bounded terminal shell-output capture and disabled output collection for custom CLI commands.
+- Updated transitive development dependencies to resolve the `brace-expansion` denial-of-service advisory.
+
 ## 0.1.7
 
 ### Changed

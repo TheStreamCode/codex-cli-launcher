@@ -11,7 +11,7 @@ Codex CLI Launcher is an unofficial VS Code extension that opens OpenAI Codex CL
 
 Works on Windows, macOS, and Linux where Codex CLI is available to the integrated terminal.
 
-Current release: `0.1.7`.
+Current release: `0.1.8`.
 
 > **Disclaimer**
 > This extension is unofficial and is not affiliated with, endorsed by, sponsored by, or approved by OpenAI. "OpenAI", "Codex", and related names are trademarks of their respective owners.
@@ -37,7 +37,7 @@ Current release: `0.1.7`.
 ## Installation
 
 1. Install the extension from the VS Code Marketplace.
-2. Install Codex CLI by following the [official Codex CLI installation documentation](https://developers.openai.com/codex/cli/).
+2. Install Codex CLI by following the [official Codex CLI installation documentation](https://learn.chatgpt.com/docs/codex/cli).
 3. Open any file in VS Code.
 4. Click the launcher button in the editor title.
 
@@ -45,7 +45,7 @@ Any equivalent install or launch method that makes `codex` available in your ter
 
 ## Missing CLI
 
-If the default `codex` command is missing, the extension offers to open the [official Codex CLI installation documentation](https://developers.openai.com/codex/cli/) in your browser. The extension does not download installers, create installation scripts, or run package-manager installation commands.
+If the default `codex` command is missing, the extension offers to open the [official Codex CLI installation documentation](https://learn.chatgpt.com/docs/codex/cli) in your browser. The extension does not download installers, create installation scripts, or run package-manager installation commands.
 
 ## How It Works
 
@@ -84,7 +84,7 @@ Windows executable path with spaces:
 
 ### The terminal opens but `codex` is not recognized
 
-Follow the [official Codex CLI installation documentation](https://developers.openai.com/codex/cli/), then confirm that `codex` works in a regular integrated terminal.
+Follow the [official Codex CLI installation documentation](https://learn.chatgpt.com/docs/codex/cli), then confirm that `codex` works in a regular integrated terminal.
 
 If your setup relies on shell initialization, restart VS Code after installation so new terminals inherit the updated environment.
 
@@ -111,15 +111,19 @@ All extension artwork is packaged locally in the VSIX. No external image assets 
 Local verification and packaging:
 
 ```bash
-npm install
+npm ci
 npm run check
-npm run test:integration
+npm run audit
 npm run package
 ```
 
 `npm run package` creates the `.vsix` file in the workspace root.
 
-The repository includes unit tests, metadata checks, VS Code integration smoke tests, and CI coverage for Windows and Linux.
+The repository includes unit tests, metadata and security checks, a VS Code integration smoke test against the minimum supported VS Code release, and CI coverage for Windows and Linux. See the [architecture](docs/architecture.md), [contribution guide](CONTRIBUTING.md), and [release checklist](docs/releasing.md) for maintainer details.
+
+## Security
+
+Do not disclose vulnerabilities in public issues. Use [GitHub private vulnerability reporting](https://github.com/TheStreamCode/codex-cli-launcher/security/advisories/new) or follow the fallback contact process in [SECURITY.md](SECURITY.md).
 
 ## Support
 

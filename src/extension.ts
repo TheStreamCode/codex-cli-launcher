@@ -1,8 +1,10 @@
 import * as vscode from 'vscode';
 import {
   FALLBACK_TERMINAL_NAME,
+  appendBoundedOutput,
   buildExtensionSettingsQuery,
   buildTerminalName,
+  isCodexCommand,
   normalizeTerminalName,
   resolveCliCommandSetting,
   resolveTerminalCwd,
@@ -10,7 +12,7 @@ import {
 } from './command-utils.js';
 
 const SETTINGS_NAMESPACE = 'codexCliLauncher';
-const CODEX_DOCS_URL = 'https://developers.openai.com/codex/cli/';
+const CODEX_DOCS_URL = 'https://learn.chatgpt.com/docs/codex/cli';
 
 let terminalSequence = 1;
 
@@ -20,7 +22,7 @@ function collectShellExecutionOutput(execution: vscode.TerminalShellExecution): 
 
     try {
       for await (const chunk of execution.read()) {
-        output += chunk;
+        output = appendBoundedOutput(output, chunk);
       }
     } catch {
       return output;
@@ -120,15 +122,19 @@ async function handleMissingCodex(): Promise<void> {
 }
 
 function watchForMissingCodex(terminal: vscode.Terminal, cliCommand: string, context: vscode.ExtensionContext): void {
+  const onShellExecutionEnd = isCodexCommand(cliCommand)
+    ? async (endEvent: vscode.TerminalShellExecutionEndEvent, output: string) => {
+        if (shouldOfferCodexInstallDocs(cliCommand, endEvent.exitCode, output)) {
+          await handleMissingCodex();
+        }
+      }
+    : undefined;
+
   executeCommandWithOptionalShellIntegration(
     terminal,
     cliCommand,
     context,
-    async (endEvent, output) => {
-      if (shouldOfferCodexInstallDocs(cliCommand, endEvent.exitCode, output)) {
-        await handleMissingCodex();
-      }
-    },
+    onShellExecutionEnd,
   );
 }
 

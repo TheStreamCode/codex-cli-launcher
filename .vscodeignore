@@ -3,8 +3,12 @@ test/**
 docs/**
 scripts/**
 .github/**
+.editorconfig
+.gitattributes
 .gitignore
+AGENTS.md
 out/**/*.map
+tsconfig.json
 *.tsbuildinfo
 .vsce/**
 package-lock.json

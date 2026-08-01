@@ -1,8 +1,10 @@
 # Documentation
 
-The root `README.md` contains user-facing setup and troubleshooting details for the current `0.1.7` release.
+The root [README](../README.md) contains user-facing setup, configuration, privacy, and troubleshooting guidance.
 
-Engineering documents can be added under:
+Maintainer documentation:
 
-- `specs/`
-- `plans/`
+- [Architecture and trust boundaries](architecture.md)
+- [Release checklist](releasing.md)
+- [Contribution guide](../CONTRIBUTING.md)
+- [Security policy](../SECURITY.md)

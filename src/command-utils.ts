@@ -1,5 +1,6 @@
 const FALLBACK_CLI_COMMAND = 'codex';
 const FALLBACK_TERMINAL_NAME = 'Codex CLI';
+const MAX_CAPTURED_SHELL_OUTPUT = 32 * 1024;
 
 type WorkspaceFolderLike<T> = { uri: T };
 type WorkspaceLike<T> = {
@@ -23,6 +24,29 @@ function getExecutableBaseName(command: string): string {
   const fileName = executable.split(/[\\/]/).pop() ?? executable;
 
   return fileName.replace(/\.(?:exe|cmd|bat|ps1)$/i, '').toLowerCase();
+}
+
+/** Returns whether the configured executable is Codex CLI. */
+export function isCodexCommand(command: string): boolean {
+  return CODEX_EXECUTABLES.has(getExecutableBaseName(command));
+}
+
+/** Appends shell output while retaining only the most recent bounded window. */
+export function appendBoundedOutput(
+  currentOutput: string,
+  chunk: string,
+  maxLength = MAX_CAPTURED_SHELL_OUTPUT,
+): string {
+  if (maxLength <= 0) {
+    return '';
+  }
+
+  if (chunk.length >= maxLength) {
+    return chunk.slice(-maxLength);
+  }
+
+  const retainedCurrentLength = maxLength - chunk.length;
+  return `${currentOutput.slice(-retainedCurrentLength)}${chunk}`;
 }
 
 function buildCommandNotFoundPatterns(command: string): RegExp[] {
@@ -103,8 +127,7 @@ export function extractExecutable(command: string): string {
 
 /** Returns whether a missing executable should offer the official Codex installation documentation. */
 export function shouldOfferCodexInstallDocs(command: string, exitCode: number | undefined, output: string): boolean {
-  const executableName = getExecutableBaseName(command);
-  if (!CODEX_EXECUTABLES.has(executableName)) {
+  if (!isCodexCommand(command)) {
     return false;
   }
 
@@ -128,4 +151,4 @@ export function resolveTerminalCwd<T>(
   return activeWorkspaceFolder?.uri ?? workspace.workspaceFolders?.[0]?.uri;
 }
 
-export { FALLBACK_CLI_COMMAND, FALLBACK_TERMINAL_NAME };
+export { FALLBACK_CLI_COMMAND, FALLBACK_TERMINAL_NAME, MAX_CAPTURED_SHELL_OUTPUT };

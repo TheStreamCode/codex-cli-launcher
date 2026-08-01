@@ -19,9 +19,9 @@ test('a missing Codex CLI can only offer the official installation documentation
   const allSource = readSourceTree(path.join(rootDir, 'src'));
   const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
 
-  assert.match(extensionSource, /const CODEX_DOCS_URL = 'https:\/\/developers\.openai\.com\/codex\/cli\/';/);
+  assert.match(extensionSource, /const CODEX_DOCS_URL = 'https:\/\/learn\.chatgpt\.com\/docs\/codex\/cli';/);
   assert.match(extensionSource, /vscode\.env\.openExternal\(vscode\.Uri\.parse\(CODEX_DOCS_URL\)\)/);
-  assert.deepEqual(extensionSource.match(/https:\/\/[^'"\s]+/g), ['https://developers.openai.com/codex/cli/']);
+  assert.deepEqual(extensionSource.match(/https:\/\/[^'"\s]+/g), ['https://learn.chatgpt.com/docs/codex/cli']);
   assert.doesNotMatch(allSource, /autoInstall|startGuidedInstall|writeCodexInstallPromptScript/);
   assert.doesNotMatch(allSource, /node:(?:fs|os|path|child_process)|\b(?:exec|execFile|spawn|fork)\s*\(/);
   assert.equal(packageJson.contributes.configuration.properties['codexCliLauncher.autoInstall'], undefined);
