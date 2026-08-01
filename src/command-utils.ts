@@ -2,6 +2,7 @@ const FALLBACK_CLI_COMMAND = 'codex';
 const FALLBACK_TERMINAL_NAME = 'Codex CLI';
 const MAX_CAPTURED_SHELL_OUTPUT = 32 * 1024;
 
+type DisposableLike = { dispose(): void };
 type WorkspaceFolderLike<T> = { uri: T };
 type WorkspaceLike<T> = {
   workspaceFolders?: readonly WorkspaceFolderLike<T>[];
@@ -140,6 +141,76 @@ export function shouldOfferCodexInstallDocs(command: string, exitCode: number | 
   }
 
   return buildCommandNotFoundPatterns(command).some((pattern) => pattern.test(output));
+}
+
+/** Disposal scope that owns every listener and timer created by a single launch. */
+export type LaunchSession<TTerminal> = {
+  readonly terminal: TTerminal;
+  add(disposable: DisposableLike): void;
+  end(): void;
+};
+
+/**
+ * Creates a disposal scope for one launcher invocation and tracks it in the shared registry.
+ * Launch-scoped listeners are released as soon as the launch finishes or its terminal closes,
+ * instead of accumulating for the whole extension lifetime.
+ */
+export function createLaunchSession<TTerminal>(
+  terminal: TTerminal,
+  registry: Set<LaunchSession<TTerminal>>,
+): LaunchSession<TTerminal> {
+  const disposables = new Set<DisposableLike>();
+  let ended = false;
+
+  const session: LaunchSession<TTerminal> = {
+    terminal,
+    add(disposable) {
+      if (ended) {
+        disposable.dispose();
+        return;
+      }
+
+      disposables.add(disposable);
+    },
+    end() {
+      if (ended) {
+        return;
+      }
+
+      ended = true;
+      registry.delete(session);
+
+      const pending = [...disposables];
+      disposables.clear();
+
+      for (const disposable of pending) {
+        disposable.dispose();
+      }
+    },
+  };
+
+  registry.add(session);
+
+  return session;
+}
+
+/** Ends every tracked session owned by the given terminal. */
+export function endLaunchSessionsForTerminal<TTerminal>(
+  registry: Set<LaunchSession<TTerminal>>,
+  terminal: TTerminal,
+): void {
+  for (const session of [...registry]) {
+    if (session.terminal === terminal) {
+      session.end();
+    }
+  }
+}
+
+/** Ends every tracked session, releasing all launch-scoped listeners and timers. */
+export function endAllLaunchSessions<TTerminal>(registry: Set<LaunchSession<TTerminal>>): void {
+  for (const session of [...registry]) {
+    session.end();
+  }
 }
 
 /** Resolves the terminal cwd from the active editor or the first workspace folder. */

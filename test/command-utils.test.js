@@ -8,6 +8,9 @@ const {
   appendBoundedOutput,
   buildExtensionSettingsQuery,
   buildTerminalName,
+  createLaunchSession,
+  endAllLaunchSessions,
+  endLaunchSessionsForTerminal,
   extractExecutable,
   isCodexCommand,
   normalizeCliCommand,
@@ -15,6 +18,19 @@ const {
   resolveTerminalCwd,
   shouldOfferCodexInstallDocs,
 } = require('../out/command-utils.js');
+
+function createDisposableSpy() {
+  const state = { disposeCount: 0 };
+
+  return {
+    state,
+    disposable: {
+      dispose() {
+        state.disposeCount += 1;
+      },
+    },
+  };
+}
 
 test('defaults target Codex CLI', () => {
   assert.equal(FALLBACK_CLI_COMMAND, 'codex');
@@ -100,6 +116,66 @@ test('shouldOfferCodexInstallDocs ignores unrelated runtime failures', () => {
 
 test('shouldOfferCodexInstallDocs ignores generic not-found messages unrelated to the executable', () => {
   assert.equal(shouldOfferCodexInstallDocs('codex', 1, 'Error: model not found'), false);
+});
+
+test('createLaunchSession releases launch-scoped disposables exactly once', () => {
+  const registry = new Set();
+  const first = createDisposableSpy();
+  const second = createDisposableSpy();
+  const session = createLaunchSession('terminal-a', registry);
+
+  session.add(first.disposable);
+  session.add(second.disposable);
+  assert.equal(registry.size, 1);
+
+  session.end();
+  session.end();
+
+  assert.equal(first.state.disposeCount, 1);
+  assert.equal(second.state.disposeCount, 1);
+  assert.equal(registry.size, 0);
+});
+
+test('createLaunchSession disposes late registrations instead of retaining them', () => {
+  const registry = new Set();
+  const late = createDisposableSpy();
+  const session = createLaunchSession('terminal-a', registry);
+
+  session.end();
+  session.add(late.disposable);
+
+  assert.equal(late.state.disposeCount, 1);
+  assert.equal(registry.size, 0);
+});
+
+test('endLaunchSessionsForTerminal only ends sessions owned by the closed terminal', () => {
+  const registry = new Set();
+  const closed = createDisposableSpy();
+  const kept = createDisposableSpy();
+
+  createLaunchSession('terminal-a', registry).add(closed.disposable);
+  createLaunchSession('terminal-b', registry).add(kept.disposable);
+
+  endLaunchSessionsForTerminal(registry, 'terminal-a');
+
+  assert.equal(closed.state.disposeCount, 1);
+  assert.equal(kept.state.disposeCount, 0);
+  assert.equal(registry.size, 1);
+});
+
+test('endAllLaunchSessions drains the registry so launches cannot accumulate', () => {
+  const registry = new Set();
+  const first = createDisposableSpy();
+  const second = createDisposableSpy();
+
+  createLaunchSession('terminal-a', registry).add(first.disposable);
+  createLaunchSession('terminal-b', registry).add(second.disposable);
+
+  endAllLaunchSessions(registry);
+
+  assert.equal(first.state.disposeCount, 1);
+  assert.equal(second.state.disposeCount, 1);
+  assert.equal(registry.size, 0);
 });
 
 test('resolveTerminalCwd uses the active editor workspace when available', () => {

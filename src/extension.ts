@@ -1,9 +1,13 @@
 import * as vscode from 'vscode';
 import {
   FALLBACK_TERMINAL_NAME,
+  type LaunchSession,
   appendBoundedOutput,
   buildExtensionSettingsQuery,
   buildTerminalName,
+  createLaunchSession,
+  endAllLaunchSessions,
+  endLaunchSessionsForTerminal,
   isCodexCommand,
   normalizeTerminalName,
   resolveCliCommandSetting,
@@ -13,8 +17,10 @@ import {
 
 const SETTINGS_NAMESPACE = 'codexCliLauncher';
 const CODEX_DOCS_URL = 'https://learn.chatgpt.com/docs/codex/cli';
+const SHELL_INTEGRATION_TIMEOUT_MS = 3000;
 
 let terminalSequence = 1;
+const launchSessions = new Set<LaunchSession<vscode.Terminal>>();
 
 function collectShellExecutionOutput(execution: vscode.TerminalShellExecution): Promise<string> {
   return (async () => {
@@ -41,12 +47,24 @@ async function openCodexInstallInstructions(): Promise<void> {
 }
 
 function executeCommandWithOptionalShellIntegration(
-  terminal: vscode.Terminal,
+  session: LaunchSession<vscode.Terminal>,
   command: string,
-  context: vscode.ExtensionContext,
   onShellExecutionEnd?: (event: vscode.TerminalShellExecutionEndEvent, output: string) => void | Promise<void>,
 ): void {
+  const terminal = session.terminal;
   let executionStarted = false;
+  let shellIntegrationListener: vscode.Disposable | undefined;
+  let fallbackHandle: ReturnType<typeof setTimeout> | undefined;
+
+  const stopWaitingForShellIntegration = () => {
+    shellIntegrationListener?.dispose();
+    shellIntegrationListener = undefined;
+
+    if (fallbackHandle !== undefined) {
+      clearTimeout(fallbackHandle);
+      fallbackHandle = undefined;
+    }
+  };
 
   const startExecution = (shellIntegration: vscode.TerminalShellIntegration) => {
     if (executionStarted) {
@@ -54,33 +72,40 @@ function executeCommandWithOptionalShellIntegration(
     }
 
     executionStarted = true;
-    shellIntegrationListener.dispose();
-    clearTimeout(fallbackHandle);
+    stopWaitingForShellIntegration();
+
+    if (!onShellExecutionEnd) {
+      shellIntegration.executeCommand(command);
+      session.end();
+      return;
+    }
 
     let execution: vscode.TerminalShellExecution | undefined;
     let outputPromise: Promise<string> | undefined;
 
-    const executionListener = onShellExecutionEnd
-      ? vscode.window.onDidEndTerminalShellExecution(async (endEvent) => {
-        if (endEvent.terminal !== terminal || (execution && endEvent.execution !== execution)) {
-          return;
-        }
+    const executionListener = vscode.window.onDidEndTerminalShellExecution(async (endEvent) => {
+      if (endEvent.terminal !== terminal || (execution && endEvent.execution !== execution)) {
+        return;
+      }
 
-        executionListener?.dispose();
-        const output = outputPromise ? await outputPromise : '';
-        await onShellExecutionEnd(endEvent, output);
-      })
-      : undefined;
+      session.end();
+      const output = outputPromise ? await outputPromise : '';
+      await onShellExecutionEnd(endEvent, output);
+    });
 
-    if (executionListener) {
-      context.subscriptions.push(executionListener);
-    }
-
+    session.add(executionListener);
     execution = shellIntegration.executeCommand(command);
     outputPromise = collectShellExecutionOutput(execution);
   };
 
-  const shellIntegrationListener = vscode.window.onDidChangeTerminalShellIntegration((event) => {
+  session.add({ dispose: stopWaitingForShellIntegration });
+
+  if (terminal.shellIntegration) {
+    startExecution(terminal.shellIntegration);
+    return;
+  }
+
+  shellIntegrationListener = vscode.window.onDidChangeTerminalShellIntegration((event) => {
     if (event.terminal !== terminal) {
       return;
     }
@@ -88,26 +113,19 @@ function executeCommandWithOptionalShellIntegration(
     startExecution(event.shellIntegration);
   });
 
-  const fallbackHandle = setTimeout(() => {
+  fallbackHandle = setTimeout(() => {
+    fallbackHandle = undefined;
+
     if (terminal.shellIntegration) {
       startExecution(terminal.shellIntegration);
       return;
     }
 
     executionStarted = true;
-    shellIntegrationListener.dispose();
+    stopWaitingForShellIntegration();
     terminal.sendText(command, true);
-  }, 3000);
-
-  if (terminal.shellIntegration) {
-    startExecution(terminal.shellIntegration);
-    return;
-  }
-
-  context.subscriptions.push(
-    shellIntegrationListener,
-    { dispose: () => clearTimeout(fallbackHandle) },
-  );
+    session.end();
+  }, SHELL_INTEGRATION_TIMEOUT_MS);
 }
 
 async function handleMissingCodex(): Promise<void> {
@@ -121,7 +139,7 @@ async function handleMissingCodex(): Promise<void> {
   }
 }
 
-function watchForMissingCodex(terminal: vscode.Terminal, cliCommand: string, context: vscode.ExtensionContext): void {
+function watchForMissingCodex(session: LaunchSession<vscode.Terminal>, cliCommand: string): void {
   const onShellExecutionEnd = isCodexCommand(cliCommand)
     ? async (endEvent: vscode.TerminalShellExecutionEndEvent, output: string) => {
         if (shouldOfferCodexInstallDocs(cliCommand, endEvent.exitCode, output)) {
@@ -130,12 +148,7 @@ function watchForMissingCodex(terminal: vscode.Terminal, cliCommand: string, con
       }
     : undefined;
 
-  executeCommandWithOptionalShellIntegration(
-    terminal,
-    cliCommand,
-    context,
-    onShellExecutionEnd,
-  );
+  executeCommandWithOptionalShellIntegration(session, cliCommand, onShellExecutionEnd);
 }
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -176,7 +189,7 @@ export function activate(context: vscode.ExtensionContext): void {
       cwd,
     });
     terminal.show();
-    watchForMissingCodex(terminal, cliCommand, context);
+    watchForMissingCodex(createLaunchSession(terminal, launchSessions), cliCommand);
     void vscode.window.setStatusBarMessage(`Started ${terminalBaseName}`, 2500);
   });
 
@@ -184,8 +197,13 @@ export function activate(context: vscode.ExtensionContext): void {
     await openExtensionSettings(context);
   });
 
-  context.subscriptions.push(openCliCommand, openSettingsCommand);
+  const terminalCloseListener = vscode.window.onDidCloseTerminal((closedTerminal) => {
+    endLaunchSessionsForTerminal(launchSessions, closedTerminal);
+  });
+
+  context.subscriptions.push(openCliCommand, openSettingsCommand, terminalCloseListener);
 }
 
 export function deactivate(): void {
+  endAllLaunchSessions(launchSessions);
 }
