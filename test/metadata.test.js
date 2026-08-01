@@ -41,7 +41,7 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.equal(packageJson.displayName, 'Codex CLI Launcher — Run OpenAI Codex in a Side Terminal');
   assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.');
   assert.equal(packageJson.publisher, 'mikesoft');
-  assert.equal(packageJson.version, '0.1.8');
+  assert.equal(packageJson.version, '0.1.9');
   assert.equal(packageJson.icon, 'media/icon.png');
   assert.equal(packageJson.license, 'MIT');
   assert.equal(packageJson.repository.url, 'https://github.com/TheStreamCode/codex-cli-launcher.git');
@@ -129,6 +129,13 @@ test('package scripts use deterministic local tooling entry points', () => {
   assert.equal(packageJson.devDependencies['@types/vscode'], '1.103.0');
 });
 
+test('no script can overwrite the published launcher artwork', () => {
+  const packageJson = readPackageJson();
+
+  assert.equal(packageJson.scripts['generate:icon'], undefined);
+  assert.equal(fs.existsSync(path.join(rootDir, 'scripts', 'generate-icon.js')), false);
+});
+
 test('ignore rules keep generated, local, and engineering-only files out of artifacts', () => {
   const gitignoreEntries = readIgnoreEntries('.gitignore');
   const vscodeignoreEntries = readIgnoreEntries('.vscodeignore');
@@ -187,6 +194,8 @@ test('changelog documents the initial release scope', () => {
   const changelog = readText('CHANGELOG.md');
 
   assert.match(changelog, /^# Changelog$/m);
+  assert.match(changelog, /## 0\.1\.9/);
+  assert.match(changelog, /launch-scoped listeners/);
   assert.match(changelog, /## 0\.1\.8/);
   assert.match(changelog, /Bounded terminal shell-output capture/);
   assert.match(changelog, /## 0\.1\.7/);

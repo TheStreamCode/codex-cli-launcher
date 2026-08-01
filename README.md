@@ -11,7 +11,7 @@ Codex CLI Launcher is an unofficial VS Code extension that opens OpenAI Codex CL
 
 Works on Windows, macOS, and Linux where Codex CLI is available to the integrated terminal.
 
-Current release: `0.1.8`.
+Current release: `0.1.9`.
 
 > **Disclaimer**
 > This extension is unofficial and is not affiliated with, endorsed by, sponsored by, or approved by OpenAI. "OpenAI", "Codex", and related names are trademarks of their respective owners.

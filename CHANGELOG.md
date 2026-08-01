@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+## 0.1.9 - 2026-08-01
+
+### Fixed
+
+- Scoped every launch to its own disposal unit, so launch-scoped listeners and the shell-integration fallback timer are released when the launch completes or its terminal closes. They were previously appended to the extension subscription list on every launch and only released on deactivation, so repeated launches grew that list without bound.
+- Stopped reading terminal shell output for custom CLI commands. Output was still buffered for every launch even though only the Codex missing-CLI check consumes it, which did not match the documented invariant.
+
+### Added
+
+- Unit tests for the launch disposal scope and source-level regression tests for the extension activation lifecycle.
+
+### Changed
+
+- Moved the launch disposal scope into `src/command-utils.ts` so it is covered by unit tests instead of only by the integration smoke test.
+- Documented the launch lifecycle in `docs/architecture.md` and `AGENTS.md`.
+
+### Removed
+
+- Removed the unused `scripts/generate-icon.js` placeholder generator and its `generate:icon` script. It had no callers and overwrote the published `media/icon.png` with a different placeholder image. The published artwork is unchanged.
+
 ## 0.1.8
 
 ### Changed

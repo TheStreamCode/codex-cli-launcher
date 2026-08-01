@@ -5,7 +5,7 @@ Releases are maintainer-only and should start from a clean, up-to-date `main` br
 ## Prepare
 
 1. Choose a semantic version and move relevant entries from `Unreleased` into that version in `CHANGELOG.md`.
-2. Synchronize the version in `package.json`, `package-lock.json`, `CITATION.cff`, `README.md`, and any other release-facing documentation.
+2. Synchronize the version in `package.json` and `package-lock.json` with `npm version <x.y.z> --no-git-tag-version`, then update `CITATION.cff`, `README.md`, the version assertion in `test/metadata.test.js`, and any other release-facing documentation.
 3. Run `npm ci`, `npm run check`, and `npm run audit`.
 4. Run `npm run package` and inspect the VSIX file list. Confirm that source, tests, workflows, `AGENTS.md`, and local artifacts are absent.
 5. Install the generated VSIX in a clean VS Code profile and smoke-test launching, settings, workspace trust, and the missing-CLI documentation prompt.
