@@ -10,6 +10,8 @@ Launch OpenAI Codex CLI in a fresh side terminal directly from the VS Code edito
 
 [**Install from Visual Studio Marketplace**](https://marketplace.visualstudio.com/items?itemName=mikesoft.vscode-codex-cli-launcher) · [**Install from Open VSX**](https://open-vsx.org/extension/mikesoft/vscode-codex-cli-launcher)
 
+Latest GitHub release: [`v0.1.10`](https://github.com/TheStreamCode/codex-cli-launcher/releases/tag/v0.1.10)
+
 Codex CLI Launcher is a small, unofficial VS Code extension for developers who already use Codex CLI and want a predictable one-click launcher inside the editor. It works on Windows, macOS, and Linux wherever `codex` is available to the integrated terminal.
 
 > **Unofficial project:** This extension is not affiliated with, endorsed by, sponsored by, or approved by OpenAI. "OpenAI", "Codex", and related names are trademarks of their respective owners.

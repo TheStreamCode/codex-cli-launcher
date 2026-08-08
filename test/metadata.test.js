@@ -41,7 +41,7 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.equal(packageJson.displayName, 'Codex CLI Launcher — Run OpenAI Codex in a Side Terminal');
   assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from the VS Code editor toolbar. Unofficial; uses your existing CLI setup on Windows, macOS, and Linux.');
   assert.equal(packageJson.publisher, 'mikesoft');
-  assert.equal(packageJson.version, '0.1.9');
+  assert.equal(packageJson.version, '0.1.10');
   assert.equal(packageJson.icon, 'media/icon.png');
   assert.equal(packageJson.license, 'MIT');
   assert.equal(packageJson.repository.url, 'https://github.com/TheStreamCode/codex-cli-launcher.git');
@@ -217,8 +217,17 @@ test('repository governance files provide structured contribution paths', () => 
 
 test('changelog documents the initial release scope', () => {
   const changelog = readText('CHANGELOG.md');
+  const citation = readText('CITATION.cff');
+  const readme = readText('README.md');
+  const packageLock = JSON.parse(readText('package-lock.json'));
 
   assert.match(changelog, /^# Changelog$/m);
+  assert.match(changelog, /## 0\.1\.10 - 2026-08-08/);
+  assert.match(readme, /releases\/tag\/v0\.1\.10/);
+  assert.match(citation, /version: "0\.1\.10"/);
+  assert.match(citation, /date-released: "2026-08-08"/);
+  assert.equal(packageLock.version, '0.1.10');
+  assert.equal(packageLock.packages[''].version, '0.1.10');
   assert.match(changelog, /## 0\.1\.9/);
   assert.match(changelog, /launch-scoped listeners/);
   assert.match(changelog, /## 0\.1\.8/);
