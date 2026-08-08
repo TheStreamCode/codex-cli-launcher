@@ -26,7 +26,7 @@ Current release: `0.1.9`.
 - Uses the active editor workspace when available, with a fallback to the first open workspace folder
 - Runs a configurable Codex CLI command
 - Links to the official Codex CLI installation documentation when the default `codex` command is not available
-- Supports quoted Windows executable paths
+- Supports quoted Windows executable paths, including PowerShell's call operator
 - Does not collect telemetry, analytics, or personal data
 
 ## Requirements
@@ -74,10 +74,16 @@ Default command:
 "codexCliLauncher.cliCommand": "codex"
 ```
 
-Windows executable path with spaces:
+Windows PowerShell executable path with spaces:
 
 ```json
-"codexCliLauncher.cliCommand": "\"C:\\Users\\You\\AppData\\Roaming\\npm\\codex.cmd\""
+"codexCliLauncher.cliCommand": "& \"C:\\Program Files\\OpenAI Codex\\codex.cmd\""
+```
+
+Windows Command Prompt executable path with spaces:
+
+```json
+"codexCliLauncher.cliCommand": "\"C:\\Program Files\\OpenAI Codex\\codex.cmd\""
 ```
 
 ## Troubleshooting
@@ -94,7 +100,7 @@ Check `codexCliLauncher.cliCommand` and verify that the same command works in a 
 
 ### Custom executable path on Windows
 
-Quote executable paths that contain spaces. This is required for commands such as `"C:\Users\You\AppData\Roaming\npm\codex.cmd"`.
+Quote executable paths that contain spaces. In PowerShell, use its call operator before the quoted path, for example `& "C:\Program Files\OpenAI Codex\codex.cmd"`. In Command Prompt, use the quoted path directly, for example `"C:\Program Files\OpenAI Codex\codex.cmd"`.
 
 ### Multi-root workspaces
 

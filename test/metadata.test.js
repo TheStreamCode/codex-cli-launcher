@@ -99,6 +99,7 @@ test('README covers setup, official installation docs, privacy, and affiliation 
   assert.match(readme, /https:\/\/learn\.chatgpt\.com\/docs\/codex\/cli/);
   assert.match(readme, /does not download installers, create installation scripts, or run package-manager installation commands/i);
   assert.match(readme, /does not collect telemetry, analytics, or personal data/i);
+  assert.match(readme, /PowerShell[\s\S]*call operator/i);
   assert.match(readme, /npm run check/);
 });
 
@@ -181,13 +182,18 @@ test('repository governance files provide structured contribution paths', () => 
   const featureRequest = readText('.github/ISSUE_TEMPLATE/feature_request.yml');
   const issueConfig = readText('.github/ISSUE_TEMPLATE/config.yml');
   const agents = readText('AGENTS.md');
+  const releaseGuide = readText('docs/releasing.md');
 
   assert.match(codeowners, /\* @TheStreamCode/);
   assert.match(bugReport, /^name: Bug report$/m);
+  assert.match(bugReport, /placeholder: Copy the installed version from the Extensions view\./);
   assert.match(featureRequest, /^name: Feature request$/m);
   assert.match(issueConfig, /security\/advisories\/new/);
+  assert.doesNotMatch(bugReport, /placeholder: 0\.1\.8/);
   assert.match(agents, /^# Repository Instructions$/m);
   assert.match(agents, /## Security invariants/);
+  assert.match(releaseGuide, /git tag -s vX\.Y\.Z/);
+  assert.match(releaseGuide, /git tag -v vX\.Y\.Z/);
 });
 
 test('changelog documents the initial release scope', () => {
