@@ -83,10 +83,25 @@ test('extractExecutable preserves quoted Windows paths with spaces', () => {
   );
 });
 
-test('isCodexCommand recognizes direct and quoted Codex executables', () => {
+test('extractExecutable recognizes PowerShell call-operator invocations', () => {
+  assert.equal(
+    extractExecutable('& "C:\\Program Files\\OpenAI Codex\\codex.cmd" --login'),
+    'C:\\Program Files\\OpenAI Codex\\codex.cmd',
+  );
+  assert.equal(
+    extractExecutable("& 'C:\\Program Files\\OpenAI Codex\\codex.ps1' --login"),
+    'C:\\Program Files\\OpenAI Codex\\codex.ps1',
+  );
+});
+
+test('isCodexCommand recognizes direct, quoted, and PowerShell Codex executables', () => {
   assert.equal(isCodexCommand('codex --login'), true);
   assert.equal(isCodexCommand('"C:\\Program Files\\OpenAI Codex\\codex.cmd" --login'), true);
+  assert.equal(isCodexCommand('& codex --login'), true);
+  assert.equal(isCodexCommand('& "C:\\Program Files\\OpenAI Codex\\codex.cmd" --login'), true);
   assert.equal(isCodexCommand('custom-codex'), false);
+  assert.equal(isCodexCommand('& custom-codex'), false);
+  assert.equal(isCodexCommand('&& codex'), false);
 });
 
 test('appendBoundedOutput retains only the latest output window', () => {
@@ -100,6 +115,10 @@ test('shouldOfferCodexInstallDocs detects PowerShell command-not-found output', 
   const output = "codex: The term 'codex' is not recognized as a name of a cmdlet, function, script file, or executable program.";
 
   assert.equal(shouldOfferCodexInstallDocs('codex', 1, output), true);
+  assert.equal(
+    shouldOfferCodexInstallDocs('& "C:\\Program Files\\OpenAI Codex\\codex.cmd"', 1, output),
+    true,
+  );
 });
 
 test('shouldOfferCodexInstallDocs detects POSIX command-not-found exit codes', () => {

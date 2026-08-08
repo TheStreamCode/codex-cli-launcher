@@ -39,7 +39,7 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.equal(packageJson.name, 'vscode-codex-cli-launcher');
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.displayName, 'Codex CLI Launcher — Run OpenAI Codex in a Side Terminal');
-  assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.');
+  assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from the VS Code editor toolbar. Unofficial; uses your existing CLI setup on Windows, macOS, and Linux.');
   assert.equal(packageJson.publisher, 'mikesoft');
   assert.equal(packageJson.version, '0.1.9');
   assert.equal(packageJson.icon, 'media/icon.png');
@@ -88,6 +88,18 @@ test('extension assets are packaged on expected paths', () => {
   assert.ok(commandIcon.length > 0);
 });
 
+test('GitHub social preview is deterministic and repository-only', () => {
+  const socialPreview = readPngSize('.github/social-preview.png');
+  const socialPreviewSource = readText('.github/social-preview.svg');
+
+  assert.equal(socialPreview.width, 1280);
+  assert.equal(socialPreview.height, 640);
+  assert.match(socialPreviewSource, /UNOFFICIAL · OPEN SOURCE/);
+  assert.match(socialPreviewSource, /One click\. Fresh side terminal\. Local CLI\./);
+  assert.doesNotMatch(socialPreviewSource, /<image/i);
+  assert.doesNotMatch(socialPreviewSource, /openai/i);
+});
+
 test('README covers setup, official installation docs, privacy, and affiliation disclaimer', () => {
   const readme = readText('README.md');
 
@@ -95,10 +107,18 @@ test('README covers setup, official installation docs, privacy, and affiliation 
   assert.match(readme, /unofficial VS Code extension/i);
   assert.match(readme, /not affiliated with, endorsed by, sponsored by, or approved by OpenAI/i);
   assert.match(readme, /## Features/);
+  assert.match(readme, /## Quick Start/);
+  assert.match(readme, /## Trust and Privacy/);
+  assert.match(readme, /## Compatibility/);
+  assert.match(readme, /Install from Visual Studio Marketplace/);
+  assert.match(readme, /Install from Open VSX/);
+  assert.match(readme, /machine-scoped and cannot be supplied by a repository/i);
+  assert.match(readme, /macOS \| Supported; not currently included in the CI matrix/);
   assert.match(readme, /## Missing CLI/);
   assert.match(readme, /https:\/\/learn\.chatgpt\.com\/docs\/codex\/cli/);
   assert.match(readme, /does not download installers, create installation scripts, or run package-manager installation commands/i);
   assert.match(readme, /does not collect telemetry, analytics, or personal data/i);
+  assert.match(readme, /PowerShell[\s\S]*call operator/i);
   assert.match(readme, /npm run check/);
 });
 
@@ -181,13 +201,18 @@ test('repository governance files provide structured contribution paths', () => 
   const featureRequest = readText('.github/ISSUE_TEMPLATE/feature_request.yml');
   const issueConfig = readText('.github/ISSUE_TEMPLATE/config.yml');
   const agents = readText('AGENTS.md');
+  const releaseGuide = readText('docs/releasing.md');
 
   assert.match(codeowners, /\* @TheStreamCode/);
   assert.match(bugReport, /^name: Bug report$/m);
+  assert.match(bugReport, /placeholder: Copy the installed version from the Extensions view\./);
   assert.match(featureRequest, /^name: Feature request$/m);
   assert.match(issueConfig, /security\/advisories\/new/);
+  assert.doesNotMatch(bugReport, /placeholder: 0\.1\.8/);
   assert.match(agents, /^# Repository Instructions$/m);
   assert.match(agents, /## Security invariants/);
+  assert.match(releaseGuide, /git tag -s vX\.Y\.Z/);
+  assert.match(releaseGuide, /git tag -v vX\.Y\.Z/);
 });
 
 test('changelog documents the initial release scope', () => {

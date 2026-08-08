@@ -2,7 +2,7 @@
   "name": "vscode-codex-cli-launcher",
   "private": true,
   "displayName": "Codex CLI Launcher — Run OpenAI Codex in a Side Terminal",
-  "description": "Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.",
+  "description": "Launch the OpenAI Codex AI coding agent in a side terminal from the VS Code editor toolbar. Unofficial; uses your existing CLI setup on Windows, macOS, and Linux.",
   "publisher": "mikesoft",
   "version": "0.1.9",
   "repository": {
@@ -91,7 +91,7 @@
           "type": "string",
           "scope": "machine",
           "default": "codex",
-          "markdownDescription": "Command used to start Codex CLI. The default is `codex`. On Windows, quote executable paths that contain spaces, for example `\"C:\\Users\\You\\AppData\\Roaming\\npm\\codex.cmd\"`."
+          "markdownDescription": "Command used to start Codex CLI. The default is `codex`. In PowerShell, prefix a quoted executable path with the call operator, for example `& \"C:\\Program Files\\OpenAI Codex\\codex.cmd\"`. In Command Prompt, use `\"C:\\Program Files\\OpenAI Codex\\codex.cmd\"`."
         },
         "codexCliLauncher.terminalName": {
           "type": "string",

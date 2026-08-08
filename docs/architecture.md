@@ -22,6 +22,7 @@ Only `activate` registers on `context.subscriptions`: the two commands and the t
 
 - Workspace files are untrusted input. They must not control `cliCommand` or bypass the workspace-trust gate.
 - The configured CLI command is trusted user intent and is sent to the integrated shell. The launcher does not parse arguments into a child process.
+- Executable recognition ignores a leading PowerShell call operator only when deciding whether to offer the missing-Codex documentation. The configured command itself is never rewritten.
 - Terminal output can contain sensitive data. It is never logged or transmitted, is never read for custom commands, and is bounded while checking for a missing Codex executable.
 - Network access is limited to opening the official Codex CLI documentation at the user's request. The extension does not make background requests.
 

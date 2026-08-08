@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Recognized PowerShell commands that use the `&` call operator with a quoted Codex executable path, while continuing to send the configured command to the shell unchanged.
+
+### Changed
+
+- Documented shell-specific Windows command examples and explicit signed-tag creation and verification steps for future releases.
+- Refined the GitHub and Marketplace presentation with clearer installation paths, a concise trust model, an explicit compatibility matrix, and less prominent cross-promotion.
+
+### Security
+
+- Updated transitive development dependencies to resolve the current `fast-uri`, `js-yaml`, and `undici` advisories in the packaging toolchain.
+
 ## 0.1.9 - 2026-08-01
 
 ### Fixed
