@@ -39,7 +39,7 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.equal(packageJson.name, 'vscode-codex-cli-launcher');
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.displayName, 'Codex CLI Launcher — Run OpenAI Codex in a Side Terminal');
-  assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.');
+  assert.equal(packageJson.description, 'Launch the OpenAI Codex AI coding agent in a side terminal from the VS Code editor toolbar. Unofficial; uses your existing CLI setup on Windows, macOS, and Linux.');
   assert.equal(packageJson.publisher, 'mikesoft');
   assert.equal(packageJson.version, '0.1.9');
   assert.equal(packageJson.icon, 'media/icon.png');
@@ -88,6 +88,18 @@ test('extension assets are packaged on expected paths', () => {
   assert.ok(commandIcon.length > 0);
 });
 
+test('GitHub social preview is deterministic and repository-only', () => {
+  const socialPreview = readPngSize('.github/social-preview.png');
+  const socialPreviewSource = readText('.github/social-preview.svg');
+
+  assert.equal(socialPreview.width, 1280);
+  assert.equal(socialPreview.height, 640);
+  assert.match(socialPreviewSource, /UNOFFICIAL · OPEN SOURCE/);
+  assert.match(socialPreviewSource, /One click\. Fresh side terminal\. Local CLI\./);
+  assert.doesNotMatch(socialPreviewSource, /<image/i);
+  assert.doesNotMatch(socialPreviewSource, /openai/i);
+});
+
 test('README covers setup, official installation docs, privacy, and affiliation disclaimer', () => {
   const readme = readText('README.md');
 
@@ -95,6 +107,13 @@ test('README covers setup, official installation docs, privacy, and affiliation 
   assert.match(readme, /unofficial VS Code extension/i);
   assert.match(readme, /not affiliated with, endorsed by, sponsored by, or approved by OpenAI/i);
   assert.match(readme, /## Features/);
+  assert.match(readme, /## Quick Start/);
+  assert.match(readme, /## Trust and Privacy/);
+  assert.match(readme, /## Compatibility/);
+  assert.match(readme, /Install from Visual Studio Marketplace/);
+  assert.match(readme, /Install from Open VSX/);
+  assert.match(readme, /machine-scoped and cannot be supplied by a repository/i);
+  assert.match(readme, /macOS \| Supported; not currently included in the CI matrix/);
   assert.match(readme, /## Missing CLI/);
   assert.match(readme, /https:\/\/learn\.chatgpt\.com\/docs\/codex\/cli/);
   assert.match(readme, /does not download installers, create installation scripts, or run package-manager installation commands/i);

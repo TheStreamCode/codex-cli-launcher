@@ -5,43 +5,63 @@
 [![Open VSX](https://img.shields.io/open-vsx/v/mikesoft/vscode-codex-cli-launcher?label=Open%20VSX&color=a60ee5)](https://open-vsx.org/extension/mikesoft/vscode-codex-cli-launcher)
 [![CI](https://github.com/TheStreamCode/codex-cli-launcher/actions/workflows/ci.yml/badge.svg)](https://github.com/TheStreamCode/codex-cli-launcher/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Sponsor](https://img.shields.io/badge/Sponsor-TheStreamCode-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/TheStreamCode)
 
-Codex CLI Launcher is an unofficial VS Code extension that opens OpenAI Codex CLI in a new side terminal directly from the editor toolbar.
+Launch OpenAI Codex CLI in a fresh side terminal directly from the VS Code editor toolbar.
 
-Works on Windows, macOS, and Linux where Codex CLI is available to the integrated terminal.
+[**Install from Visual Studio Marketplace**](https://marketplace.visualstudio.com/items?itemName=mikesoft.vscode-codex-cli-launcher) · [**Install from Open VSX**](https://open-vsx.org/extension/mikesoft/vscode-codex-cli-launcher)
 
-Current release: `0.1.9`.
+Codex CLI Launcher is a small, unofficial VS Code extension for developers who already use Codex CLI and want a predictable one-click launcher inside the editor. It works on Windows, macOS, and Linux wherever `codex` is available to the integrated terminal.
 
-> **Disclaimer**
-> This extension is unofficial and is not affiliated with, endorsed by, sponsored by, or approved by OpenAI. "OpenAI", "Codex", and related names are trademarks of their respective owners.
-
-> **✨ Want one launcher for every agent?** Try **[Super CLI](https://marketplace.visualstudio.com/items?itemName=mikesoft.vscode-super-cli)** — a single sidebar that launches Claude Code, Codex, Copilot, Cursor, Grok, Kilo, Antigravity, OpenCode, and more. Install this launcher for Codex alone, or Super CLI for the whole set.
+> **Unofficial project:** This extension is not affiliated with, endorsed by, sponsored by, or approved by OpenAI. "OpenAI", "Codex", and related names are trademarks of their respective owners.
 
 ## Features
 
-- Adds a launcher button to the editor title area
-- Uses local Marketplace and toolbar artwork packaged with the extension
-- Opens a fresh terminal beside the active editor on every launch
-- Uses the active editor workspace when available, with a fallback to the first open workspace folder
-- Runs a configurable Codex CLI command
+- Launch Codex CLI from the editor title with one click
+- Open a fresh side terminal for every launch instead of reusing existing sessions
+- Start in the active editor's workspace, with a predictable fallback for multi-root windows
+- Configure the launch command and terminal name without repository-controlled overrides
 - Links to the official Codex CLI installation documentation when the default `codex` command is not available
 - Supports quoted Windows executable paths, including PowerShell's call operator
 - Does not collect telemetry, analytics, or personal data
+
+## Quick Start
+
+1. Install Codex CLI using the [official Codex CLI documentation](https://learn.chatgpt.com/docs/codex/cli).
+2. Install Codex CLI Launcher from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=mikesoft.vscode-codex-cli-launcher) or [Open VSX](https://open-vsx.org/extension/mikesoft/vscode-codex-cli-launcher).
+3. Open a file in a trusted workspace.
+4. Click the launcher button in the editor title.
+
+VS Code users can also install the extension from a terminal:
+
+```bash
+code --install-extension mikesoft.vscode-codex-cli-launcher
+```
+
+## Trust and Privacy
+
+- The launcher is disabled until the workspace is trusted.
+- The CLI command is machine-scoped and cannot be supplied by a repository.
+- The extension never downloads Codex CLI, generates installer scripts, or runs package-manager installation commands.
+- Shell-output capture is bounded and used only to recognize a missing default `codex` command. Output from custom commands is not read.
+- No telemetry, analytics, or personal data is collected.
+- All extension artwork is packaged in the VSIX; no external images are loaded at runtime.
+
+See [SECURITY.md](SECURITY.md) and the [architecture documentation](docs/architecture.md) for the maintained trust boundaries.
+
+## Compatibility
+
+| Environment | Status |
+| --- | --- |
+| VS Code `^1.103.0` | Supported and covered by the minimum-version integration test |
+| Windows | Supported and validated in CI |
+| Linux | Supported and validated in CI |
+| macOS | Supported; not currently included in the CI matrix |
+| Other VS Code-compatible editors | May work when they provide the required VS Code APIs, but are not part of the supported test matrix |
 
 ## Requirements
 
 - VS Code `^1.103.0`
 - Codex CLI available in the integrated terminal environment, or a working custom launch command configured in settings
-
-## Installation
-
-1. Install the extension from the VS Code Marketplace.
-2. Install Codex CLI by following the [official Codex CLI installation documentation](https://learn.chatgpt.com/docs/codex/cli).
-3. Open any file in VS Code.
-4. Click the launcher button in the editor title.
-
-Any equivalent install or launch method that makes `codex` available in your terminal also works.
 
 ## Missing CLI
 
@@ -106,12 +126,6 @@ Quote executable paths that contain spaces. In PowerShell, use its call operator
 
 The launcher prefers the workspace folder of the active editor. To control where Codex starts in a multi-root window, open a file from the target workspace before clicking the toolbar button.
 
-## Privacy
-
-Codex CLI Launcher does not collect telemetry, analytics, or personal data.
-
-All extension artwork is packaged locally in the VSIX. No external image assets are loaded at runtime.
-
 ## Development
 
 Local verification and packaging:
@@ -136,6 +150,10 @@ Do not disclose vulnerabilities in public issues. Use [GitHub private vulnerabil
 Open a [GitHub issue](https://github.com/TheStreamCode/codex-cli-launcher/issues) for bugs and feature requests. For support details, see [SUPPORT.md](SUPPORT.md).
 
 Financial support for the independent maintainer is available through GitHub Sponsors: [github.com/sponsors/TheStreamCode](https://github.com/sponsors/TheStreamCode).
+
+## Related Project
+
+Need one launcher for multiple coding agents? [Super CLI](https://marketplace.visualstudio.com/items?itemName=mikesoft.vscode-super-cli) provides a single sidebar for Codex, Claude Code, Copilot, Cursor, Grok, Kilo, Antigravity, OpenCode, and other agent CLIs.
 
 ## License
 

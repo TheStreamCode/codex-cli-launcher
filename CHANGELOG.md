@@ -9,6 +9,7 @@
 ### Changed
 
 - Documented shell-specific Windows command examples and explicit signed-tag creation and verification steps for future releases.
+- Refined the GitHub and Marketplace presentation with clearer installation paths, a concise trust model, an explicit compatibility matrix, and less prominent cross-promotion.
 
 ### Security
 

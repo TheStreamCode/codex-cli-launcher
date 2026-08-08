@@ -2,7 +2,7 @@
   "name": "vscode-codex-cli-launcher",
   "private": true,
   "displayName": "Codex CLI Launcher — Run OpenAI Codex in a Side Terminal",
-  "description": "Launch the OpenAI Codex AI coding agent in a side terminal from your editor toolbar. Unofficial; works in VS Code, Cursor & Windsurf on Windows, macOS & Linux.",
+  "description": "Launch the OpenAI Codex AI coding agent in a side terminal from the VS Code editor toolbar. Unofficial; uses your existing CLI setup on Windows, macOS, and Linux.",
   "publisher": "mikesoft",
   "version": "0.1.9",
   "repository": {
