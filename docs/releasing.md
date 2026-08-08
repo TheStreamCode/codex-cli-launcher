@@ -14,7 +14,7 @@ Releases are maintainer-only and should start from a clean, up-to-date `main` br
 
 1. Commit the release metadata and merge it through the protected branch workflow.
 2. Update the local `main` branch to the merge commit, then rerun `npm ci`, `npm run check`, `npm run audit`, and `npm run package` from that clean commit.
-3. Create a signed `vX.Y.Z` tag at the verified commit.
+3. Create a signed annotated tag with `git tag -s vX.Y.Z -m "vX.Y.Z"`, then verify it with `git tag -v vX.Y.Z` before pushing it.
 4. Publish that exact verified VSIX through the maintainer's Visual Studio Marketplace and Open VSX release channels, then attach the same artifact to a GitHub release with concise notes.
 5. Confirm the Marketplace, Open VSX, README badges, GitHub release, and repository default branch all report the same version.
 

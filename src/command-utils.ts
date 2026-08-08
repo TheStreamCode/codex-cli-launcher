@@ -20,6 +20,20 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function stripPowerShellCallOperator(command: string): string {
+  const normalized = command.trim();
+  const nextCharacter = normalized[1];
+
+  if (
+    normalized[0] === '&'
+    && (nextCharacter === '"' || nextCharacter === "'" || /\s/.test(nextCharacter ?? ''))
+  ) {
+    return normalized.slice(1).trimStart();
+  }
+
+  return normalized;
+}
+
 function getExecutableBaseName(command: string): string {
   const executable = extractExecutable(command);
   const fileName = executable.split(/[\\/]/).pop() ?? executable;
@@ -106,9 +120,9 @@ export function buildExtensionSettingsQuery(extensionId: string): string {
   return `@ext:${extensionId}`;
 }
 
-/** Extracts the executable token while preserving quoted Windows paths with spaces. */
+/** Extracts the executable token, including quoted paths invoked with PowerShell's call operator. */
 export function extractExecutable(command: string): string {
-  const normalized = command.trim();
+  const normalized = stripPowerShellCallOperator(command);
 
   if (!normalized) {
     return '';

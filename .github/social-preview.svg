@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">Codex CLI Launcher social preview</title>
+  <desc id="description">Unofficial VS Code extension that launches Codex CLI in a side terminal.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0f19" />
+      <stop offset="0.58" stop-color="#11182a" />
+      <stop offset="1" stop-color="#17122a" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f6fed" />
+      <stop offset="1" stop-color="#a855f7" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="42" />
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#000000" flood-opacity="0.42" />
+    </filter>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#background)" />
+  <circle cx="1125" cy="82" r="210" fill="#7c3aed" opacity="0.18" filter="url(#glow)" />
+  <circle cx="90" cy="610" r="190" fill="#2563eb" opacity="0.16" filter="url(#glow)" />
+  <path d="M0 520 C270 450 420 610 700 535 C955 467 1080 485 1280 430 L1280 640 L0 640 Z" fill="#ffffff" opacity="0.018" />
+
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <g transform="translate(86 88)">
+      <rect width="214" height="38" rx="19" fill="#ffffff" opacity="0.08" />
+      <circle cx="21" cy="19" r="5" fill="#a855f7" />
+      <text x="37" y="25" fill="#d7dce8" font-size="15" font-weight="700" letter-spacing="1.7">UNOFFICIAL · OPEN SOURCE</text>
+
+      <text x="0" y="132" fill="#ffffff" font-size="68" font-weight="750" letter-spacing="-2.2">Codex CLI</text>
+      <text x="0" y="204" fill="#ffffff" font-size="68" font-weight="750" letter-spacing="-2.2">Launcher</text>
+      <rect x="0" y="236" width="92" height="5" rx="2.5" fill="url(#accent)" />
+      <text x="0" y="292" fill="#b9c2d3" font-size="26" font-weight="500">One click. Fresh side terminal. Local CLI.</text>
+      <text x="0" y="337" fill="#7f8ba3" font-size="20">VS Code · Windows · macOS · Linux</text>
+
+      <g transform="translate(0 395)">
+        <rect width="226" height="56" rx="12" fill="url(#accent)" />
+        <text x="29" y="36" fill="#ffffff" font-size="20" font-weight="700">Editor → Terminal</text>
+      </g>
+    </g>
+
+    <g transform="translate(760 92)" filter="url(#shadow)">
+      <rect width="430" height="456" rx="22" fill="#0a0e17" stroke="#ffffff" stroke-opacity="0.12" />
+      <rect width="430" height="54" rx="22" fill="#151b29" />
+      <rect y="32" width="430" height="22" fill="#151b29" />
+      <circle cx="28" cy="27" r="6" fill="#fb7185" />
+      <circle cx="50" cy="27" r="6" fill="#fbbf24" />
+      <circle cx="72" cy="27" r="6" fill="#4ade80" />
+      <text x="108" y="33" fill="#8691a6" font-size="16">project.ts — Visual Studio Code</text>
+
+      <g transform="translate(28 82)">
+        <text x="0" y="18" fill="#566078" font-family="Consolas, monospace" font-size="15">1</text>
+        <rect x="32" y="5" width="214" height="10" rx="5" fill="#2f6fed" opacity="0.62" />
+        <text x="0" y="50" fill="#566078" font-family="Consolas, monospace" font-size="15">2</text>
+        <rect x="32" y="37" width="292" height="10" rx="5" fill="#8b5cf6" opacity="0.48" />
+        <text x="0" y="82" fill="#566078" font-family="Consolas, monospace" font-size="15">3</text>
+        <rect x="32" y="69" width="168" height="10" rx="5" fill="#5b6578" opacity="0.52" />
+        <text x="0" y="114" fill="#566078" font-family="Consolas, monospace" font-size="15">4</text>
+        <rect x="32" y="101" width="248" height="10" rx="5" fill="#5b6578" opacity="0.38" />
+      </g>
+
+      <g transform="translate(22 238)">
+        <rect width="386" height="194" rx="15" fill="#101827" stroke="#a855f7" stroke-opacity="0.32" />
+        <rect width="386" height="42" rx="15" fill="#182235" />
+        <rect y="24" width="386" height="18" fill="#182235" />
+        <text x="18" y="27" fill="#c4ccda" font-size="14" font-weight="650">CODEX CLI</text>
+        <circle cx="348" cy="21" r="3" fill="#7f8ba3" />
+        <circle cx="362" cy="21" r="3" fill="#7f8ba3" />
+        <text x="22" y="86" fill="#6ee7b7" font-family="Consolas, monospace" font-size="19">❯ codex</text>
+        <rect x="22" y="111" width="214" height="9" rx="4.5" fill="#718096" opacity="0.48" />
+        <rect x="22" y="136" width="300" height="9" rx="4.5" fill="#718096" opacity="0.3" />
+        <rect x="22" y="161" width="148" height="9" rx="4.5" fill="#a855f7" opacity="0.5" />
+      </g>
+    </g>
+
+    <text x="86" y="602" fill="#69758c" font-size="16" letter-spacing="0.8">THESTREAMCODE / MIKESOFT</text>
+    <text x="1190" y="602" fill="#69758c" font-size="16" text-anchor="end">MIT LICENSE</text>
+  </g>
+</svg>

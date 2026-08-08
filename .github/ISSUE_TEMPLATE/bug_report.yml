@@ -50,7 +50,7 @@ body:
     id: extension_version
     attributes:
       label: Extension version
-      placeholder: 0.1.8
+      placeholder: Copy the installed version from the Extensions view.
     validations:
       required: true
   - type: input
