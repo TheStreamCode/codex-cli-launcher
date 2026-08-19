@@ -159,4 +159,4 @@ Need one launcher for multiple coding agents? [Super CLI](https://marketplace.vi
 
 ## License
 
-Released under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
