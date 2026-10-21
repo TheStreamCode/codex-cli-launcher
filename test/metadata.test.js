@@ -44,8 +44,9 @@ test('package metadata is public-ready and clearly unofficial', () => {
   assert.equal(packageJson.version, '0.1.10');
   assert.equal(packageJson.icon, 'media/icon.png');
   assert.equal(packageJson.license, 'MIT');
-  assert.equal(packageJson.repository.url, 'https://github.com/TheStreamCode/codex-cli-launcher.git');
+  assert.equal(packageJson.repository, 'github:TheStreamCode/codex-cli-launcher');
   assert.equal(packageJson.bugs.url, 'https://github.com/TheStreamCode/codex-cli-launcher/issues');
+  assert.equal(packageJson.homepage, 'https://marketplace.visualstudio.com/items?itemName=mikesoft.vscode-codex-cli-launcher');
   assert.equal(packageJson.engines.vscode, '^1.103.0');
   assert.deepEqual(packageJson.capabilities.untrustedWorkspaces.restrictedConfigurations, [
     'codexCliLauncher.cliCommand',
@@ -100,26 +101,39 @@ test('GitHub social preview is deterministic and repository-only', () => {
   assert.doesNotMatch(socialPreviewSource, /openai/i);
 });
 
-test('README covers setup, official installation docs, privacy, and affiliation disclaimer', () => {
+test('README follows the shared section order and keeps setup, privacy, and affiliation guidance', () => {
   const readme = readText('README.md');
+  const headings = [...readme.matchAll(/^## (.+)$/gm)].map((match) => match[1]);
 
   assert.match(readme, /^# Codex CLI Launcher$/m);
+  assert.deepEqual(headings, [
+    'Install',
+    'Quick start',
+    'Features',
+    'Requirements',
+    'Configuration',
+    'Privacy and security',
+    'Troubleshooting',
+    'Development',
+    'Support',
+    'Contributing',
+    'License',
+  ]);
+  assert.match(readme, /actions\/workflows\/ci\.yml\/badge\.svg/);
+  assert.match(readme, /License-MIT/);
+  assert.match(readme, /Maintained by \[Michael Gasperini \(Mikesoft\)\]\(https:\/\/mikesoft\.it\)/);
   assert.match(readme, /unofficial VS Code extension/i);
   assert.match(readme, /not affiliated with, endorsed by, sponsored by, or approved by OpenAI/i);
-  assert.match(readme, /## Features/);
-  assert.match(readme, /## Quick Start/);
-  assert.match(readme, /## Trust and Privacy/);
-  assert.match(readme, /## Compatibility/);
-  assert.match(readme, /Install from Visual Studio Marketplace/);
-  assert.match(readme, /Install from Open VSX/);
+  assert.match(readme, /\[Visual Studio Marketplace\]\(https:\/\/marketplace\.visualstudio\.com\/items\?itemName=mikesoft\.vscode-codex-cli-launcher\)/);
+  assert.match(readme, /\[Open VSX\]\(https:\/\/open-vsx\.org\/extension\/mikesoft\/vscode-codex-cli-launcher\)/);
   assert.match(readme, /machine-scoped and cannot be supplied by a repository/i);
   assert.match(readme, /macOS \| Supported; not currently included in the CI matrix/);
-  assert.match(readme, /## Missing CLI/);
   assert.match(readme, /https:\/\/learn\.chatgpt\.com\/docs\/codex\/cli/);
   assert.match(readme, /does not download installers, create installation scripts, or run package-manager installation commands/i);
   assert.match(readme, /does not collect telemetry, analytics, or personal data/i);
   assert.match(readme, /PowerShell[\s\S]*call operator/i);
   assert.match(readme, /npm run check/);
+  assert.doesNotMatch(readme, /Current documented release/);
 });
 
 test('legal and support documents are present and do not overclaim affiliation', () => {
@@ -223,7 +237,8 @@ test('changelog documents the initial release scope', () => {
 
   assert.match(changelog, /^# Changelog$/m);
   assert.match(changelog, /## 0\.1\.10 - 2026-08-08/);
-  assert.match(readme, /releases\/tag\/v0\.1\.10/);
+  assert.match(readme, /releases\/latest/);
+  assert.doesNotMatch(readme, /Current documented release/);
   assert.match(citation, /version: "0\.1\.10"/);
   assert.match(citation, /date-released: "2026-08-08"/);
   assert.equal(packageLock.version, '0.1.10');

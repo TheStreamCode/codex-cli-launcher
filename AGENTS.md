@@ -83,7 +83,7 @@ Marketplace and Open VSX tokens (`VSCE_PAT`, `OVSX_PAT`) belong to the maintaine
 - No breaking changes. Setting ids, command ids, the publisher, and the extension name are part of the installed user's configuration and must stay stable.
 - Do not raise `engines.vscode` without a real API requirement, and keep `@types/vscode` equal to that floor.
 - Verify behavior on both Windows and POSIX shells when command parsing or terminal execution changes.
-- Keep the version synchronized across `package.json`, `package-lock.json`, `CITATION.cff`, `README.md`, `CHANGELOG.md`, and `test/metadata.test.js`.
+- Keep the version synchronized across `package.json`, `package-lock.json`, `CITATION.cff`, `CHANGELOG.md`, and `test/metadata.test.js`.
 
 ## Change conventions
 
