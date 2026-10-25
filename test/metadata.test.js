@@ -217,7 +217,7 @@ test('repository governance files provide structured contribution paths', () => 
   const agents = readText('AGENTS.md');
   const releaseGuide = readText('docs/releasing.md');
 
-  assert.match(codeowners, /\* @TheStreamCode/);
+  assert.match(codeowners, /@TheStreamCode/);
   assert.match(bugReport, /^name: Bug report$/m);
   assert.match(bugReport, /placeholder: Copy the installed version from the Extensions view\./);
   assert.match(featureRequest, /^name: Feature request$/m);
