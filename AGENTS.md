@@ -48,7 +48,7 @@ out/              generated compiler output (never edit, never commit)
 | Dependency audit | `npm run audit` |
 | Build the VSIX | `npm run package` |
 
-There is no dev server, no deploy step, and no publish script. Publishing is a manual maintainer action through `vsce` and `ovsx`; see `docs/releasing.md`.
+There is no dev server and no publish script. After the GitHub Release exists, the owner dispatches the Release workflow with the release tag; it publishes the released VSIX to the Marketplace and Open VSX through OIDC trusted publishing. See `docs/releasing.md`.
 
 ## Launch lifecycle
 
@@ -70,7 +70,7 @@ Every launch instead creates a disposal scope with `createLaunchSession`. Regist
 
 The extension reads no environment variables at runtime. `VSCODE_TEST_VERSION` only selects the VS Code build used by the integration test.
 
-Marketplace and Open VSX tokens (`VSCE_PAT`, `OVSX_PAT`) belong to the maintainer's local environment. Never commit them, never echo them, never add them to workflows, issue comments, or release notes. No repository secret is required by any workflow in this repository.
+No long-lived publishing token is required or stored in this repository, and no registry secret is configured in GitHub Actions: the Release workflow exchanges a short-lived OIDC token at publish time. Never commit or echo publishing tokens, and never add them to workflows, issue comments, or release notes.
 
 ## Generated and protected files
 
